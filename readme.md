@@ -1,4 +1,4 @@
-# 🤖 TREND TREND — Crypto Trading Bot
+# 🤖 TREND — Crypto Trading Bot
 
 Bot trading crypto dengan strategi **Trend Following** menggunakan:
 - EMA200 (filter trend utama)
