@@ -1,4 +1,4 @@
-# 🤖 CRYPTO TREND — Crypto Trading Bot
+# 🤖 TREND TREND — Crypto Trading Bot
 
 Bot trading crypto dengan strategi **Trend Following** menggunakan:
 - EMA200 (filter trend utama)
@@ -35,7 +35,7 @@ tuyul/
 
 - **Python 3.9+**
 - **pip** (package manager)
-- Akun **Binance** (mainnet atau testnet)
+- Akun **Binance** (mainnet atau demo)
 
 ### 2. Install Dependencies
 
@@ -60,50 +60,78 @@ python-dotenv>=1.0.0
 
 3. Setup API Key
 
-🧪 Untuk Testnet (REKOMENDASI untuk belajar)
+⚠️ PENTING: Binance Testnet Lama SUDAH DIGANTI
 
-Futures Testnet:
+Binance telah mengganti sistem testnet terpisah (testnet.binancefuture.com & testnet.binance.vision) dengan platform terpadu bernama "Demo Trading".
 
-1. Buka https://testnet.binancefuture.com
-2. Login dengan akun Binance
-3. Menu API Key → Generate
-4. Copy API Key + Secret Key
-5. Paste ke .env:
+· ❌ testnet.binancefuture.com — SUDAH TIDAK BISA generate API key
+· ❌ testnet.binance.vision — SUDAH TIDAK BISA generate API key
+· ✅ demo.binance.com — Tempat baru untuk Demo Trading
+
+Kalau kamu buka testnet lama dan tidak menemukan tempat untuk ambil API key, itu karena sudah dipindahkan. Ikuti panduan di bawah.
+
+---
+
+🧪 Setup Demo Trading (REKOMENDASI untuk belajar)
+
+Langkah-langkah:
+
+1. Login ke Akun Binance
+   · Buka https://www.binance.com
+   · Login dengan akun Binance kamu (akun biasa, bukan testnet)
+2. Masuk ke Halaman Demo Trading
+   · Kunjungi: https://demo.binance.com
+   · Kalau pertama kali, klik "Start Demo Trading" atau sejenisnya
+   · Masuk ke halaman trading dulu (klik salah satu pair), baru menu API akan muncul
+3. Buka API Management
+   · Langsung ke: https://demo.binance.com/en/my/settings/api-management
+   · Atau: dari halaman trading → klik ikon profil → API Management
+4. Create API Key
+   · Klik "Create API" → beri label (mis. tuyul-bot)
+   · Sistem akan generate API Key + Secret Key
+   · ⚠️ Secret Key hanya muncul SEKALI — copy dan simpan di password manager
+5. Enable Permission
+   · ✅ Enable Futures (untuk bot_futures.py)
+   · ✅ Enable Spot & Margin Trading (untuk bot_spot.py)
+   · ❌ JANGAN enable Withdrawals
+6. Saldo Demo
+   · Binance Demo Trading kasih saldo virtual gratis (biasanya ~15.000 USDT)
+   · Tidak ada uang nyata — aman untuk eksperimen
+7. Paste ke .env
    ```
-   FUTURES_API_KEY=isi_disini
-   FUTURES_API_SECRET=isi_disini
+   FUTURES_API_KEY=isi_api_key_demo
+   FUTURES_API_SECRET=isi_secret_demo
+   SPOT_API_KEY=isi_api_key_demo
+   SPOT_API_SECRET=isi_secret_demo
    USE_TESTNET=true
    ```
 
-Saldo testnet: 15.000 USDT gratis (virtual).
+---
 
-Spot Testnet:
+💰 Setup Mainnet (Uang Sungguhan)
 
-1. Buka https://testnet.binance.vision
-2. Login dengan akun GitHub
-3. Generate API Key
-4. Paste ke .env:
+⚠️ Lakukan ini HANYA setelah sukses di Demo Trading minimal 2 minggu.
+
+1. Login Binance → Profile → API Management
+   · URL: https://www.binance.com/en/my/settings/api-management
+2. Klik Create API → System generated
+3. Beri label (mis. "tuyul-live")
+4. Enable:
+   · ✅ Enable Spot & Margin Trading
+   · ✅ Enable Futures
+5. DISABLE (WAJIB):
+   · ❌ Enable Withdrawals
+   · ❌ Enable Internal Transfer
+   · ❌ Permits Universal Transfer
+6. Restrict IP ke IP publik kamu (sangat disarankan)
+7. Copy API Key + Secret → paste ke .env:
    ```
    SPOT_API_KEY=isi_disini
    SPOT_API_SECRET=isi_disini
-   USE_TESTNET=true
+   FUTURES_API_KEY=isi_disini
+   FUTURES_API_SECRET=isi_disini
+   USE_TESTNET=false
    ```
-
-💰 Untuk Mainnet (uang sungguhan)
-
-1. Login Binance → Profile → API Management
-2. Klik Create API → System generated
-3. Beri label (mis. "tuyul-bot")
-4. Enable:
-   · ✅ Enable Spot & Margin Trading
-   · ✅ Enable Futures (kalau mau futures)
-5. DISABLE:
-   · ❌ Enable Withdrawals (WAJIB! keamanan)
-   · ❌ Enable Internal Transfer
-6. Restrict IP ke IP kamu (opsional, tapi sangat disarankan)
-7. Copy API Key + Secret → paste ke .env
-
-⚠️ Secret Key hanya muncul SEKALI. Simpan di password manager.
 
 ---
 
@@ -152,7 +180,7 @@ python app.py
 ```bash
 # === MODE ===
 TRADING_MODE=futures          # 'spot' atau 'futures'
-USE_TESTNET=true              # true = testnet, false = mainnet
+USE_TESTNET=true              # true = Demo Trading, false = Mainnet
 
 # === SYMBOL ===
 SYMBOL=SOLUSDT                # Pair yang ditradingkan
@@ -172,24 +200,54 @@ FUTURES_LEVERAGE=3            # Leverage (1-10 aman)
 ALLOW_SHORT=true              # Izinkan short di futures
 
 # === STRATEGI ===
-EMA_PERIOD=200                # Periode EMA utama
-UTBOT_SENSITIVITY=3           # 1=agresif, 5=konservatif
+EMA_PERIOD=200
+UTBOT_SENSITIVITY=3
 UTBOT_ATR_PERIOD=10
 ADX_PERIOD=14
-ADX_THRESHOLD=25              # 20=konservatif, 30=ketat
+ADX_THRESHOLD=25
 OBV_EMA_PERIOD=20
 
 # === RISK ===
-SL_ATR_MULT=2.0               # Stop Loss = 2× ATR
-TP_ATR_MULT=4.0               # Take Profit = 4× ATR
+SL_ATR_MULT=2.0
+TP_ATR_MULT=4.0
 
 # === FUNDING GATE ===
-FUNDING_CHECK=true            # Cek funding rate sebelum entry
-FUNDING_MAX_RATE=0.0005       # Skip jika funding > 0.05%/8h
+FUNDING_CHECK=true
+FUNDING_MAX_RATE=0.0005
 
 # === LOOP ===
-LOOP_SEC=60                   # Interval cek sinyal (detik)
+LOOP_SEC=60
 ```
+
+---
+
+🔧 Update Kode: Base URL untuk Demo Trading
+
+⚠️ Setelah dapat API key dari Demo Trading, kamu WAJIB update Base URL di kode.
+
+Binance Demo Trading pakai domain berbeda dari testnet lama:
+
+bot_futures.py — Ubah baris BASE_URL:
+
+```python
+# SEBELUM (testnet lama — sudah tidak aktif):
+# BASE_URL = "https://testnet.binancefuture.com" if USE_TESTNET else "https://fapi.binance.com"
+
+# SESUDAH (Demo Trading baru):
+BASE_URL = "https://demo-fapi.binance.com" if USE_TESTNET else "https://fapi.binance.com"
+```
+
+bot_spot.py — Ubah baris BASE_URL:
+
+```python
+# SEBELUM (testnet lama — sudah tidak aktif):
+# BASE_URL = "https://testnet.binance.vision" if USE_TESTNET else "https://api.binance.com"
+
+# SESUDAH (Demo Trading baru):
+BASE_URL = "https://demo-api.binance.com" if USE_TESTNET else "https://api.binance.com"
+```
+
+Kalau tidak diubah, bot akan error -2015: Invalid API-key karena API key Demo Trading tidak valid di endpoint testnet lama.
 
 ---
 
@@ -246,6 +304,23 @@ Expectancy: positif kalau disiplin
 
 🐛 Troubleshooting
 
+❌ Tidak ada menu/tempat untuk ambil API key di testnet
+
+Penyebab: Binance sudah mengganti sistem testnet terpisah dengan Demo Trading.
+
+Fix:
+
+1. JANGAN pakai testnet.binancefuture.com atau testnet.binance.vision — sudah usang
+2. Masuk ke https://demo.binance.com (login pakai akun Binance biasa)
+3. Masuk ke halaman trading dulu (klik salah satu pair) — menu API baru akan muncul
+4. Buka https://demo.binance.com/en/my/settings/api-management
+5. Klik Create API → copy API Key + Secret
+6. Update .env dengan key baru
+7. Update BASE_URL di kode ke https://demo-fapi.binance.com (futures) atau https://demo-api.binance.com (spot)
+8. Restart bot
+
+---
+
 Error: -1021: Timestamp for this request is outside of the recvWindow
 
 Penyebab: Waktu HP/laptop tidak sinkron dengan server Binance.
@@ -267,8 +342,9 @@ Fix:
 
 1. Cek FUTURES_API_KEY / SPOT_API_KEY di .env (tidak ada spasi di awal/akhir)
 2. Cek API key belum expired
-3. Cek permission Enable Futures / Enable Spot Trading sudah dicentang
-4. Kalau IP restriction aktif, tambahkan IP publik kamu
+3. Cek permission Enable Futures / Enable Spot Trading sudah dicentang di halaman API Management Demo Trading (bukan testnet lama!)
+4. Pastikan BASE_URL sudah diarahkan ke demo-fapi.binance.com / demo-api.binance.com, bukan testnet lama
+5. Kalau IP restriction aktif, tambahkan IP publik kamu
 
 ---
 
@@ -299,7 +375,7 @@ Penyebab: Saldo tidak cukup untuk buka posisi.
 
 Fix:
 
-· Cek saldo di Binance
+· Cek saldo di Binance (Demo: cek di demo.binance.com)
 · Kurangi FUTURES_MARGIN_USDT atau FUTURES_LEVERAGE
 · Cek ada posisi terbuka yang mengunci margin
 
@@ -359,7 +435,7 @@ Gejala: Bot pikir FLAT padahal ada posisi, atau sebaliknya.
 Fix:
 
 1. Stop bot
-2. Cek posisi real di Binance
+2. Cek posisi real di Binance (atau Demo Trading)
 3. Edit manual spot_state.json / futures_state.json
 4. Atau hapus file state — bot akan reset ke FLAT
 5. Restart bot
@@ -383,10 +459,11 @@ DRY_RUN=false tapi order tidak masuk
 
 Cek:
 
-1. API key permission (Futures harus enabled)
+1. API key permission (Futures harus enabled di Demo Trading)
 2. Saldo cukup
 3. Symbol valid (SOLUSDT bukan SOL_USDT)
-4. Log error spesifik (biasanya ada kode)
+4. Base URL sudah diarahkan ke Demo Trading (demo-fapi.binance.com)
+5. Log error spesifik (biasanya ada kode)
 
 ---
 
@@ -395,13 +472,14 @@ Cek:
 Fase 0 — Setup (Hari 1)
 
 ☐ Install Python + dependencies
-☐ Buat akun Binance Testnet
-☐ Generate API key testnet
-☐ Isi .env
+☐ Buat akun Binance Demo Trading (demo.binance.com)
+☐ Generate API key di https://demo.binance.com/en/my/settings/api-management
+☐ Update BASE_URL di bot_spot.py dan bot_futures.py
+☐ Isi .env dengan API key Demo
 ☐ Jalankan python app.py dengan DRY_RUN=true
 ☐ Pastikan log muncul tanpa error
 
-Fase 1 — Dry-Run Testnet (3 hari)
+Fase 1 — Dry-Run Demo (3 hari)
 
 ☐ Jalankan bot 24/7 (pakai nohup atau screen)
 ☐ Log semua signal yang muncul
@@ -409,7 +487,7 @@ Fase 1 — Dry-Run Testnet (3 hari)
 ☐ Pastikan tidak crash
 ☐ Belum ada uang real
 
-Fase 2 — Live Testnet (2 minggu)
+Fase 2 — Live Demo Trading (2 minggu)
 
 ☐ Set DRY_RUN=false
 ☐ Bot buka/tutup posisi real (uang dummy)
@@ -454,7 +532,7 @@ Fase 5 — Advanced (3-6 bulan, opsional)
 2. Bot ini BUKAN jaminan profit. Strategi ini butuh disiplin dan evaluasi terus-menerus.
 3. Uang yang dipakai = uang yang RELA hilang. Jangan pakai uang dapur, uang sekolah, atau uang pinjaman.
 4. Tidak ada sistem yang 100% winrate. Winrate 40-50% dengan R:R 1:2 masih bisa profit.
-5. Testnet ≠ Mainnet. Hasil testnet bagus belum tentu sama di mainnet.
+5. Demo Trading ≠ Mainnet. Hasil demo bagus belum tentu sama di mainnet.
 6. Backtest ≠ Masa depan. Data historis tidak menjamin performa ke depan.
 7. Mulai kecil, belajar, baru scale. Jangan langsung modal besar.
 
@@ -501,7 +579,7 @@ cp futures_state.json futures_state.backup.json
 Cek PnL kumulatif
 
 Buka state.json → lihat entry_price vs current price.
-Atau cek history di Binance → Order History.
+Atau cek history di Binance → Order History (atau Demo Trading → Order History).
 
 ---
 
@@ -561,8 +639,28 @@ Kalau menemukan bug atau punya saran, catat di sini:
 
 ---
 
-Versi: 1.0
-Update terakhir: 2026
+📌 Changelog
+
+v1.1 (2026-10)
+
+· 🔄 BREAKING: Update Demo Trading endpoints (Binance ganti testnet lama)
+· 📝 Tambah panduan ambil API key di demo.binance.com
+· 🐛 Fix: troubleshooting untuk "tidak ada menu API key"
+· 📝 Update troubleshooting -2015 untuk arahkan ke Demo Trading
+
+v1.0 (2026-10)
+
+· Initial release
+· Spot + Futures support
+· Long + Short untuk futures
+· Funding rate gate
+· DRY_RUN mode
+
+---
+
+Versi: 1.1
+Update terakhir: Oktober 2026
 Status: Beta — untuk pembelajaran, bukan untuk produksi serius
 
 Remember: Trading is not a get-rich-quick scheme. It's a skill that takes years to master.
+Mulai kecil, belajar dari kesalahan, dan tetap disiplin.
